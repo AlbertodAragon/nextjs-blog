@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useHandleSubmit } from "../lib/handleSubmit";
 
 export default function NewPostPage() {
-  const router = useRouter();
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -11,23 +10,12 @@ export default function NewPostPage() {
     imageAlt: "",
   });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const res = await fetch("/api/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    if (res.ok) {
-      router.push("/");
-    }
-  }
+  const { handleSubmit } = useHandleSubmit();
 
   return (
     <div style={{ padding: "20px" }}>
       <h1>Create a New Post</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e, form)}>
         <input
           type="text"
           placeholder="Title"
